@@ -19,7 +19,7 @@ Ensure you have the latest version of the ELK stack installed. Follow the offici
 To proceed with the installation, you will need the zip file provided in the repository and the shell script (`setup_database.sh`) included in this repository. First, complete the prerequisites and then clone the repository:
 
 ```sh
-git clone https://github.com/yourusername/es-ipgeo-ingest-processor.git
+git clone https://github.com/IPGeolocation/es-ipgeo-ingest-processor.git
 cd es-ipgeo-ingest-processor
 ```
 
