@@ -1,6 +1,6 @@
 # ES IPGeo Ingest Processor
 
-The Elastic Search IPGeo Ingest Processor contains the [`es-ipgeo-ingest-processor.zip`](https://github.com/IPGeolocation/es-ipgeo-ingest-processor), an Elasticsearch ingest processor plugin designed to enrich documents containing an IP address with geolocation, currency, security, and timezone data using the ipgeolocation.io databases. Depending on the type of ipgeolocation.io database you are using, you can access various types of data such as country, city, latitude, longitude, timezone, currency information, and security details.
+The Elastic Search IPGeo Ingest Processor contains the [es-ipgeo-ingest-processor.zip](https://github.com/IPGeolocation/es-ipgeo-ingest-processor), an Elasticsearch ingest processor plugin designed to enrich documents containing an IP address with geolocation, currency, security, and timezone data using the ipgeolocation.io databases. Depending on the type of ipgeolocation.io database you are using, you can access various types of data such as country, city, latitude, longitude, timezone, currency information, and security details.
 
 The enriched documents can then be used for visualization in Kibana, providing a powerful way to analyze and display geospatial data. The processor can also be integrated with Logstash to enrich real-time logs, index them into Elasticsearch, and then visualize the data in Kibana. This repository contains all the instructions and examples for installation and usage with Elasticsearch, Logstash, and Kibana.
 
