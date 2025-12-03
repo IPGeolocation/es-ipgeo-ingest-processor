@@ -15,7 +15,7 @@ For more information on available databases, visit [ipgeolocation.io databases i
 
 ## Installation
 
-Please refer to [installation.md](docs/installation.md) for detailed instructions on how to install the plugin.
+Please refer to [installation.md](https://github.com/IPGeolocation/es-ipgeo-ingest-processor/blob/main/docs/installation.md) for detailed instructions on how to install the plugin.
 
 ### Installation Overview
 
@@ -28,7 +28,7 @@ Please refer to [installation.md](docs/installation.md) for detailed instruction
 
 ## Usage With Elasticsearch
 
-Refer to [usage-with-es.md](docs/usage-with-es.md) for detailed instructions on how to use this plugin with Elasticsearch, including example configurations and sample data.
+Refer to [usage-with-es.md](https://github.com/IPGeolocation/es-ipgeo-ingest-processor/blob/main/docs/usage-with-es.md) for detailed instructions on how to use this plugin with Elasticsearch, including example configurations and sample data.
 
 ### ES Usage Highlights
 
@@ -39,7 +39,7 @@ Refer to [usage-with-es.md](docs/usage-with-es.md) for detailed instructions on 
 
 ## Usage with Logstash
 
-Check out [usage-with-logstash.md](docs/usage-with-logstash.md) for guidance on integrating this plugin with Logstash.
+Check out [usage-with-logstash.md](https://github.com/IPGeolocation/es-ipgeo-ingest-processor/blob/main/docs/usage-with-logstash.md) for guidance on integrating this plugin with Logstash.
 
 ### Logstash Integration Overview
 
@@ -49,7 +49,7 @@ Check out [usage-with-logstash.md](docs/usage-with-logstash.md) for guidance on 
 
 ## Usage with Kibana
 
-For using this plugin with Kibana, see [visualization-on-kibana.md](docs/visualization-on-kibana.md).
+For using this plugin with Kibana, see [visualization-on-kibana.md](https://github.com/IPGeolocation/es-ipgeo-ingest-processor/blob/main/docs/visualization-on-kibana.md).
 
 ### Kibana Integration Overview
 
