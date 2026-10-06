@@ -55,13 +55,13 @@ For using this plugin with Kibana, see [visualization-on-kibana.md](https://gith
 
 - **Data View Creation**: Set up data views in Kibana to recognize and utilize the enriched fields.
 - **Map Visualization**: Create interactive maps in Kibana to visualize geospatial data.
-- **Dashboard Setup**: Build comprehensive dashboards to display and analyze enriched data effectively.
+- **Dashboard setup**: Build dashboards that break down traffic by country, ISP or threat status.
 
 ## Additional Details
 
 ### Data Enrichment Capabilities
 
-The IPGeo Ingest Processor leverages the powerful databases from ipgeolocation.io to provide extensive data enrichment capabilities. This includes:
+The IPGeo Ingest Processor looks up each IP address in ipgeolocation.io data and adds these fields to the document:
 
 - **Country and City Information**: Adds precise location details based on the IP address.
 - **ISP and Organization Data**: Provides information about the internet service provider and organization associated with the IP address.
@@ -73,7 +73,7 @@ The IPGeo Ingest Processor leverages the powerful databases from ipgeolocation.i
 - **Enhanced Analytics**: By enriching your documents with geolocation data, you can perform more detailed and meaningful analysis.
 - **Improved Decision Making**: Visualizing geospatial data helps in making informed decisions based on the geographic distribution of your data.
 - **Real-Time Insights**: Integrating with Logstash enables real-time log enrichment, allowing you to monitor and respond to events as they happen.
-- **Comprehensive Visualization**: Using Kibana, you can create powerful visualizations and dashboards to track and analyze geospatial data effectively.
+- **Maps and dashboards**: Once the fields are indexed, you can plot requests on a Kibana map and filter by country, ISP, or threat flags.
 
 ### Practical Use Cases
 
@@ -82,4 +82,4 @@ The IPGeo Ingest Processor leverages the powerful databases from ipgeolocation.i
 - **Logistics and Fleet Management**: Track the real-time location of vehicles and optimize routes for efficiency.
 - **Public Health Monitoring**: Track the spread of diseases geographically and allocate resources effectively.
 
-By following the detailed guides and leveraging the capabilities of the IPGeo Ingest Processor, you can significantly enhance your Elasticsearch, Logstash, and Kibana workflows with enriched geolocation data.
+Once the pipeline is running, every new log line reaches Elasticsearch with location, network, security, currency and timezone fields already attached.
