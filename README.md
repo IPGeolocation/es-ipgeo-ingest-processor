@@ -79,7 +79,7 @@ The IPGeo Ingest Processor looks up each IP address in ipgeolocation.io data and
 
 - **Network Security Monitoring**: Identify and respond to suspicious activities by analyzing the geographic origin of network traffic.
 - **Sales and Marketing Analysis**: Understand the geographic distribution of your customers and tailor marketing strategies accordingly.
-- **Logistics and Fleet Management**: Track the real-time location of vehicles and optimize routes for efficiency.
+- **Logistics and Fleet Management**: Analyze the approximate geographic distribution of traffic to logistics applications. Use GPS or device-location data for vehicle tracking and route planning.
 - **Public Health Monitoring**: Track the spread of diseases geographically and allocate resources effectively.
 
 Once the pipeline is running, every new log line reaches Elasticsearch with location, network, security, currency and timezone fields already attached.
