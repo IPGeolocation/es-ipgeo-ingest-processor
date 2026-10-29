@@ -1,10 +1,10 @@
 # Elasticsearch IPGeo Ingest Processor
 
-The Elasticsearch IPGeo [Ingest Processor](https://github.com/IPGeolocation/es-ipgeo-ingest-processor) contains the `es-ipgeo-ingest-processor.zip`, an Elasticsearch ingest processor plugin designed to enrich documents containing an IP address with geolocation, currency, security, and timezone data using the ipgeolocation.io databases. Depending on the type of ipgeolocation.io database you are using, you can access various types of data such as country, city, latitude, longitude, timezone, currency information, and security details.
+The Elasticsearch IPGeo [Ingest Processor](https://github.com/IPGeolocation/es-ipgeo-ingest-processor) contains the `es-ipgeo-ingest-processor.zip`, an Elasticsearch ingest processor plugin designed to enrich documents containing an IP address with geolocation, currency, security, and timezone data using the IPGeolocation.io databases. Depending on the type of IPGeolocation.io database you are using, you can access various types of data such as country, city, latitude, longitude, timezone, currency information, and security details.
 
 The enriched documents can then be used for visualization in Kibana, providing a powerful way to analyze and display geospatial data. The processor can also be integrated with Logstash to enrich real-time logs, index them into Elasticsearch, and then visualize the data in Kibana. This repository contains all the instructions and examples for installation and usage with Elasticsearch, Logstash, and Kibana.
 
-For more information on available databases, visit [ipgeolocation.io databases information](https://ipgeolocation.io/db-pricing.html).
+For more information on available databases, visit [IPGeolocation.io databases information](https://ipgeolocation.io/db-pricing.html).
 
 ## Features
 
@@ -61,7 +61,7 @@ For using this plugin with Kibana, see [visualization-on-kibana.md](https://gith
 
 ### Data Enrichment Capabilities
 
-The IPGeo Ingest Processor looks up each IP address in ipgeolocation.io data and adds these fields to the document:
+The IPGeo Ingest Processor looks up each IP address in IPGeolocation.io data and adds these fields to the document:
 
 - **Country and City Information**: Adds precise location details based on the IP address.
 - **ISP and Organization Data**: Provides information about the internet service provider and organization associated with the IP address.
