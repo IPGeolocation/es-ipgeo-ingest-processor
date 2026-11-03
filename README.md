@@ -19,9 +19,9 @@ Please refer to [installation.md](https://github.com/IPGeolocation/es-ipgeo-inge
 
 ### Installation Overview
 
-1. **Prerequisites**: Ensure you have Java 21 and the latest version of the ELK stack installed.
+1. **Prerequisites**: Ensure you have Java 21 and Elasticsearch 8.13.3 installed, the version the published plugin build is compiled for.
 2. **Download and Prepare Files**: Clone the repository and prepare the required zip and shell script files.
-3. **Configure Plugin Version**: Set the appropriate Elasticsearch version in the `plugin-descriptor.properties` file.
+3. **Match the Elasticsearch Version**: Install the plugin build compiled for your exact Elasticsearch version. Editing `elasticsearch.version` in `plugin-descriptor.properties` does not make the plugin compatible with another version.
 4. **Install the Plugin**: Use the Elasticsearch plugin installation command to install the plugin.
 5. **Run the Setup Database Script**: Configure and download the necessary databases using the provided script.
 6. **Verify Installation**: Ensure the databases are correctly placed and restart Elasticsearch.
