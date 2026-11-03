@@ -1,6 +1,6 @@
 # Elasticsearch IPGeo Ingest Processor
 
-The Elasticsearch IPGeo [Ingest Processor](https://github.com/IPGeolocation/es-ipgeo-ingest-processor) contains the `es-ipgeo-ingest-processor.zip`, an Elasticsearch ingest processor plugin designed to enrich documents containing an IP address with geolocation, currency, security, and timezone data using the IPGeolocation.io databases. Depending on the type of IPGeolocation.io database you are using, you can access various types of data such as country, city, latitude, longitude, timezone, currency information, and security details.
+The Elasticsearch IPGeo [Ingest Processor](https://github.com/IPGeolocation/es-ipgeo-ingest-processor) contains the `es-ipgeo-ingest-processor.zip`, an Elasticsearch ingest processor plugin designed to enrich documents containing an IP address with geolocation, currency, security, and time zone data using the IPGeolocation.io databases. Depending on the type of IPGeolocation.io database you are using, you can access various types of data such as country, city, latitude, longitude, time zone, currency information, and security details.
 
 The enriched documents can then be used for visualization in Kibana, providing a powerful way to analyze and display geospatial data. The processor can also be integrated with Logstash to enrich real-time logs, index them into Elasticsearch, and then visualize the data in Kibana. This repository contains all the instructions and examples for installation and usage with Elasticsearch, Logstash, and Kibana.
 
@@ -11,7 +11,7 @@ For more information on available databases, visit [IPGeolocation.io databases i
 - **Geolocation Enrichment**: Automatically enriches documents with detailed geolocation data such as country, city, latitude, longitude and much more.
 - **Currency Information**: Adds currency data based on the IP address location.
 - **Security Details**: Includes security-related information such as whether the IP is a known attacker, proxy, or belongs to a cloud provider.
-- **Timezone Data**: Provides timezone information for the IP address, including the current time and offset.
+- **Timezone Data**: Provides time zone information for the IP address, including the current time and offset.
 
 ## Installation
 
@@ -44,7 +44,7 @@ Check out [usage-with-logstash.md](https://github.com/IPGeolocation/es-ipgeo-ing
 ### Logstash Integration Overview
 
 - **Configuration File Setup**: Create and configure Logstash pipeline files to read logs and enrich them using the IPGeo processor.
-- **Real-Time Log Enrichment**: Set up Logstash to process and enrich real-time logs with geolocation, currency, security, and timezone data.
+- **Real-Time Log Enrichment**: Set up Logstash to process and enrich real-time logs with geolocation, currency, security, and time zone data.
 - **Indexing Logs in Elasticsearch**: Index the enriched logs into Elasticsearch for further analysis and visualization.
 
 ## Usage with Kibana
