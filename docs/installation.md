@@ -7,10 +7,10 @@ This guide provides detailed instructions for installing the IPGeolocation Inges
 ### 1. Java 21
 You must have Java 21 installed on your system. Follow this guide to install Java 21 on Linux: [Install Java 21 on Linux](https://www.oracle.com/java/technologies/javase/jdk21-archive-downloads.html).
 
-### 2. Latest Version of ELK Stack
-Ensure you have the latest version of the ELK stack installed. Follow the official Elasticsearch documentation for installation instructions based on your operating system: [Install ELK Stack](https://www.elastic.co/guide/en/elastic-stack/current/installing-elastic-stack.html).
+### 2. Elasticsearch 8.13.3
+Install Elasticsearch 8.13.3, the version the published plugin build is compiled for. Follow the official Elasticsearch documentation for installation instructions based on your operating system: [Install ELK Stack](https://www.elastic.co/guide/en/elastic-stack/current/installing-elastic-stack.html).
 
-> **Note**: At the time of writing this installation guide, the processor has been tested with JDK 21 (mandatory) and ELK version 8.3.3. The version of ELK may vary, and detailed instructions on aligning versions are provided below.
+> **Note**: The published build (plugin version 1.0.0) is built for Elasticsearch 8.13.3 and requires JDK 21. Any other Elasticsearch version needs a build compiled for that version; see the next step.
 
 ## Installation Instructions
 
@@ -23,9 +23,9 @@ git clone https://github.com/IPGeolocation/es-ipgeo-ingest-processor.git
 cd es-ipgeo-ingest-processor
 ```
 
-### 2. Configure Plugin Version
+### 2. Match the Elasticsearch Version
 
-The zip file contains a file named `plugin-descriptor.properties` where you can specify the version of the ELK stack you are currently using. Ensure the `elasticsearch.version` in this file aligns with your installed version (e.g., `elasticsearch.version=8.13.3`).
+Classic Elasticsearch plugins must be built for each Elasticsearch release, and Elasticsearch checks the version when it installs and loads the plugin. The zip in this repository is built for Elasticsearch 8.13.3 (`elasticsearch.version=8.13.3` in its `plugin-descriptor.properties`). If you run a different version, [contact support](https://ipgeolocation.io/contact.html) for a build compiled for it, and test it before deployment. Do not edit `elasticsearch.version` to make this build install on another version: that skips the check but does not rebuild the plugin.
 
 ### 3. Install the Plugin
 
