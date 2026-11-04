@@ -41,7 +41,6 @@ class InstallerTest(unittest.TestCase):
                     (CLOUD, gzip.compress(b"Example Network\n", mtime=0))]
         cls.cases = {
             "valid": {"status": 200, "body": archive(cls.good)},
-            "slow": {"status": 200, "body": archive(cls.good), "delay": 3000},
             "unauthorized": {"status": 401, "body": b"Unauthorized"},
             "server-error": {"status": 500, "body": b"Server error"},
             "truncated": {"status": 200, "body": archive(cls.good)[:80]},
@@ -199,7 +198,7 @@ shift
 
     def test_failed_downloads_preserve_existing_databases(self):
         for name in self.cases:
-            if name in ("valid", "slow", "unrelated", "cloud-only", "geo-only", "security-only"):
+            if name in ("valid", "unrelated", "cloud-only", "geo-only", "security-only"):
                 continue
             with self.subTest(name=name):
                 self.assertNotEqual(0, self.run_case(name)[0])
@@ -265,12 +264,37 @@ shift
         self.assert_preserved()
 
     def test_concurrent_update_is_rejected(self):
-        first = self.start("slow")
-        deadline = time.monotonic() + 10
-        while not (self.data / ".ipgeo-setup.lock").exists() and time.monotonic() < deadline:
-            time.sleep(.02)
-        self.assertNotEqual(0, self.run_case()[0])
-        self.assertEqual(0, first.wait(timeout=30))
+        ready = self.base / "first-ready"
+        release = self.base / "release-first"
+        fault = '''java() {
+  touch "$PWD/first-ready"
+  while [[ ! -f "$PWD/release-first" ]]; do sleep .02; done
+  command java "$@"
+}'''
+        first = self.start(fault=fault)
+        try:
+            deadline = time.monotonic() + 30
+            while not ready.exists() and first.poll() is None and time.monotonic() < deadline:
+                time.sleep(.02)
+            self.assertTrue(ready.exists(), "First installer did not reach database validation")
+            self.assertTrue((self.data / ".ipgeo-setup.lock").is_dir())
+            code, output = self.run_case()
+            self.assertNotEqual(0, code)
+            self.assertIn("Another setup may be running:", output)
+            self.assertIsNone(first.poll())
+        finally:
+            release.touch()
+            try:
+                first.wait(timeout=30)
+            except subprocess.TimeoutExpired:
+                try:
+                    os.killpg(first.pid, signal.SIGKILL)
+                except ProcessLookupError:
+                    pass
+                first.wait(timeout=5)
+                raise
+        self.assertEqual(0, first.returncode)
+        self.assertEqual(self.good[0][1], (self.data / GEO).read_bytes())
         self.assert_unrelated()
 
     def test_directory_swap_is_rejected(self):
