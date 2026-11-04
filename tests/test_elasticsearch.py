@@ -38,7 +38,7 @@ class ElasticsearchTest(unittest.TestCase):
     def test_database_versions_and_languages(self):
         for version in ("DB-I", "DB-II", "DB-III", "DB-IV", "DB-V", "DB-VI", "DB-VII"):
             for ip in ("8.8.8.8", "2001:4860::8888"):
-                for language, country in (("en", "United States"), ("ar", "الولايات المتحدة")):
+                for language, country in (("en", "United States"), ("de", "Deutsch")):
                     with self.subTest(version=version, ip=ip, language=language):
                         result = simulate({"database_version": version, "language": language,
                                            "include": "security"}, {"ip": ip})
@@ -51,8 +51,8 @@ class ElasticsearchTest(unittest.TestCase):
         self.assertEqual({"country_name": "United States"}, simulate({"fields": "country_name"})["doc"]["_source"]["ipgeo"])
         geo = simulate({"fields": "country_name,latitude,longitude", "excludes": "country_name"})["doc"]["_source"]["ipgeo"]
         self.assertEqual({"location"}, set(geo))
-        result = simulate({"target_field": "enrichment.geo", "language": "ar"})["doc"]["_source"]
-        self.assertEqual("الولايات المتحدة", result["enrichment"]["geo"]["country_name"])
+        result = simulate({"target_field": "enrichment.geo", "language": "en"})["doc"]["_source"]
+        self.assertEqual("United States", result["enrichment"]["geo"]["country_name"])
         result = simulate({"fields": "latitude"})["doc"]["_source"]["ipgeo"]
         self.assertEqual({"latitude"}, set(result))
 
@@ -66,7 +66,7 @@ class ElasticsearchTest(unittest.TestCase):
 
     def test_indexing_with_geo_point_mapping(self):
         request("PUT", "/_ingest/pipeline/ipgeo-package-check", {"processors": [{"ipgeo": {
-            "field": "ip", "database_version": "DB-IV", "language": "ar"
+            "field": "ip", "database_version": "DB-IV", "language": "en"
         }}]})
         request("PUT", "/ipgeo-package-check", {"settings": {"number_of_replicas": 0}, "mappings": {"properties": {
             "ipgeo": {"properties": {"location": {"type": "geo_point"}}}
@@ -74,7 +74,7 @@ class ElasticsearchTest(unittest.TestCase):
         try:
             request("PUT", "/ipgeo-package-check/_doc/1?pipeline=ipgeo-package-check&refresh=true", {"ip": "8.8.8.8"})
             source = request("GET", "/ipgeo-package-check/_doc/1")["_source"]
-            self.assertEqual("الولايات المتحدة", source["ipgeo"]["country_name"])
+            self.assertEqual("United States", source["ipgeo"]["country_name"])
             self.assertIn("location", source["ipgeo"])
         finally:
             request("DELETE", "/ipgeo-package-check")

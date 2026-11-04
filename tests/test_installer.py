@@ -46,8 +46,11 @@ class InstallerTest(unittest.TestCase):
             "server-error": {"status": 500, "body": b"Server error"},
             "truncated": {"status": 200, "body": archive(cls.good)[:80]},
             "not-zip": {"status": 200, "body": b"not a zip"},
-            "missing-geo": {"status": 200, "body": archive(cls.good[1:])},
-            "missing-cloud": {"status": 200, "body": archive(cls.good[:1])},
+            "cloud-only": {"status": 200, "body": archive(cls.good[1:])},
+            "geo-only": {"status": 200, "body": archive(cls.good[:1])},
+            "security-only": {"status": 200, "body": archive([
+                ("db-ip-security.mmdb", (ROOT / "tests/fixtures/db-ip-security.mmdb").read_bytes())])},
+            "no-databases": {"status": 200, "body": archive([("readme.txt", b"no database")])},
             "bad-mmdb": {"status": 200, "body": archive([(GEO, b"bad"), cls.good[1]])},
             "bad-gzip": {"status": 200, "body": archive([cls.good[0], (CLOUD, b"bad")])},
             "empty-csv": {"status": 200, "body": archive([cls.good[0], (CLOUD, gzip.compress(b""))])},
@@ -196,11 +199,23 @@ shift
 
     def test_failed_downloads_preserve_existing_databases(self):
         for name in self.cases:
-            if name in ("valid", "slow", "unrelated"):
+            if name in ("valid", "slow", "unrelated", "cloud-only", "geo-only", "security-only"):
                 continue
             with self.subTest(name=name):
                 self.assertNotEqual(0, self.run_case(name)[0])
                 self.assert_preserved()
+
+    def test_subscription_packages_only_replace_included_files(self):
+        for name, included in (("geo-only", GEO), ("cloud-only", CLOUD), ("security-only", "db-ip-security.mmdb")):
+            with self.subTest(package=name):
+                previous = {p.name: p.read_bytes() for p in self.data.iterdir()}
+                self.assertEqual(0, self.run_case(name)[0])
+                with zipfile.ZipFile(io.BytesIO(self.cases[name]["body"])) as bundle:
+                    self.assertEqual(bundle.read(included), (self.data / included).read_bytes())
+                for filename, content in previous.items():
+                    if filename != included:
+                        self.assertEqual(content, (self.data / filename).read_bytes())
+                self.assert_unrelated()
 
     def test_never_extracts_unrelated_archive_paths(self):
         self.assertEqual(0, self.run_case("unrelated")[0])
@@ -288,7 +303,7 @@ shift
         self.assert_preserved()
 
     def test_command_entry_and_service_user_readability(self):
-        args = ["bash", str(ROOT / "setup_database.sh"), "-d", "valid",
+        args = [str(ROOT / "setup_database.sh"), "-d", "valid",
                 "-t", str(self.data), "-e", str(self.extract)]
         env = os.environ.copy()
         env["IPGEOLOCATION_API_KEY"] = KEY
@@ -298,6 +313,11 @@ shift
             self.assertIn("Please run as root", result.stdout)
             self.assert_preserved()
             return
+        preserved = subprocess.run([
+            "sudo", "-n", "--preserve-env=IPGEOLOCATION_API_KEY", "bash", "-c",
+            '[[ "$IPGEOLOCATION_API_KEY" == "$1" ]]', "test-key", KEY
+        ], env=env, capture_output=True, timeout=5)
+        self.assertEqual(0, preserved.returncode)
         self.base.chmod(0o755)
         self.data.chmod(0o755)
         os.chown(self.data / GEO, 65534, 65534)
