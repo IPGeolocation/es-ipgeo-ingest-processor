@@ -82,4 +82,4 @@ The IPGeo Ingest Processor looks up each IP address in IPGeolocation.io data and
 - **Logistics and Fleet Management**: Analyze the approximate geographic distribution of traffic to logistics applications. Use GPS or device-location data for vehicle tracking and route planning.
 - **Public Health Monitoring**: Track the spread of diseases geographically and allocate resources effectively.
 
-Once the pipeline is running, every new log line reaches Elasticsearch with location, network, security, currency and timezone fields already attached.
+Once the pipeline is running, every new log line reaches Elasticsearch with location, network, security, currency and time zone fields already attached.
