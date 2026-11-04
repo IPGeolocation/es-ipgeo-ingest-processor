@@ -1,0 +1,7 @@
+version: 1
+name: database-download
+origin: https://database.ipgeolocation.io
+interceptRequests: true
+scenarios:
+  - name: default
+    path: default.js
