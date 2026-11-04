@@ -1,0 +1,8 @@
+simulation: database-installer-checks
+routing: path
+mocks:
+  - name: database-download
+    routeKey: database
+    origin:
+      - database.ipgeolocation.io
+    path: ./mock/config.yaml

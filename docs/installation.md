@@ -10,13 +10,15 @@ You must have Java 21 installed on your system. Follow this guide to install Jav
 ### 2. Elasticsearch 8.13.3
 Install Elasticsearch 8.13.3, the version the published plugin build is compiled for. Follow the official Elasticsearch documentation for installation instructions based on your operating system: [Install ELK Stack](https://www.elastic.co/guide/en/elastic-stack/current/installing-elastic-stack.html).
 
-> **Note**: The published build (plugin version 1.0.0) is built for Elasticsearch 8.13.3 and requires JDK 21. Any other Elasticsearch version needs a build compiled for that version; see the next step.
+> **Note**: The published build (plugin version 1.0.1) is built for Elasticsearch 8.13.3 and requires JDK 21. Any other Elasticsearch version needs a build compiled for that version; see the next step.
 
 ## Installation Instructions
 
 ### 1. Download and Prepare the Files
 
 To proceed with the installation, you will need the zip file provided in the repository and the shell script (`setup_database.sh`) included in this repository. First, complete the prerequisites and then clone the repository:
+
+Keep `es-ipgeo-ingest-processor.zip` beside `setup_database.sh`. Setup uses the ZIP to check the downloaded databases.
 
 ```sh
 git clone https://github.com/IPGeolocation/es-ipgeo-ingest-processor.git
@@ -32,9 +34,9 @@ Classic Elasticsearch plugins must be built for each Elasticsearch release, and 
 You can install the plugin by specifying the Elasticsearch plugins directory and the path to the zip file:
 
 ```sh
-sudo /usr/share/elasticsearch/bin/elasticsearch-plugin install file:/home/elk-plugin/es-ipgeo-ingest-processor.zip
+sudo /usr/share/elasticsearch/bin/elasticsearch-plugin install "file://$(pwd)/es-ipgeo-ingest-processor.zip"
 ```
-> **Note**: `/home/elk-plugin` is the home directory of the server where the plugin is being installed.
+> **Note**: Run this command from the repository folder you cloned above.
 
 This command will output a confirmation message indicating that the plugin has been installed successfully and that Elasticsearch needs to be restarted.
 
@@ -52,18 +54,18 @@ This will display the following usage information:
 Usage: ./setup_database.sh -a <api_key> -d <database_name> -t <data_directory> -e <extraction_directory>
 ```
 
-- **API Key (`-a <api_key>`)**: Your IPGeolocation API key.
+- **API Key (`-a <api_key>`)**: Your IPGeolocation.io API key. You can also export it as `IPGEOLOCATION_API_KEY`, run setup with `sudo --preserve-env=IPGEOLOCATION_API_KEY`, and leave out `-a`.
 - **Database Name (`-d <database_name>`)**: The name of the database you are using from IPGeolocation.
-- **Data Directory (`-t <data_directory>`)**: The configuration directory of Elasticsearch on your system. For Debian packages, this is usually `/etc/elasticsearch/`.
-- **Extraction Directory (`-e <extraction_directory>`)**: Any directory on your system where temporary files can be extracted.
+- **Data Directory (`-t <data_directory>`)**: The plugin’s database folder inside the Elasticsearch configuration directory. For Debian packages, use `/etc/elasticsearch/ipgeo`.
+- **Extraction Directory (`-e <extraction_directory>`)**: Use a folder owned by root, such as `/var/tmp/ipgeo`. Setup creates its own temporary folder inside it and leaves existing files untouched.
 
 Make sure to run this script with `sudo` and provide the required arguments. Here is an example command:
 
 ```sh
-sudo ./setup_database.sh -a <api_key> -d <database_name> -t /etc/elasticsearch/ipgeo -e /home/elk-plugin/ipgeo
+sudo ./setup_database.sh -a <api_key> -d <database_name> -t /etc/elasticsearch/ipgeo -e /var/tmp/ipgeo
 ```
 
-You do not need to create the `extraction_directory` (e.g., `ipgeo` above) manually. The script will create it if it does not exist and then delete it once the process is complete. This script will download the necessary database from IPGeolocation.io and place the required files in the plugin directory (e.g., `/etc/elasticsearch/ipgeo`).
+Setup creates the extraction folder if needed and removes only its own temporary files. It checks the downloaded databases before replacing files in `/etc/elasticsearch/ipgeo`. Unrelated files stay in place. If a replacement fails, setup restores the previous files.
 
 To obtain your API key and database name, please contact our support: [Contact Support](https://ipgeolocation.io/contact.html).
 
@@ -75,7 +77,7 @@ Verify that the databases have been downloaded and placed correctly:
 sudo ls -lah /etc/elasticsearch/ipgeo
 ```
 
-If you see files in the folder, it means the setup was successful, and you are ready to restart Elasticsearch.
+Check that setup finishes without errors and prints ‘Database setup completed successfully.’ The files downloaded depend on your subscription and database type.
 
 ### 6. Restart Elasticsearch
 
