@@ -62,7 +62,7 @@ setup_database() (
   done
 
   secure_path() {
-    local path="$1" owner mode
+    local path="$1" allow_sticky_leaf="${2:-1}" owner mode
     while :; do
       if [[ -e "$path" || -L "$path" ]]; then
         [[ -d "$path" && ! -L "$path" ]] || fail "Use a real directory, not a symbolic link: $path"
@@ -74,7 +74,7 @@ setup_database() (
         fi
         [[ "$owner" -eq 0 || "$owner" -eq "$EUID" ]] || fail "Directory must be owned by the current user or root: $path"
         if (( (8#$mode & 0022) != 0 )); then
-          (( owner == 0 && (8#$mode & 01000) != 0 )) || fail "Directory must not be writable by other users: $path"
+          (( owner == 0 && (8#$mode & 01000) != 0 )) && [[ "$allow_sticky_leaf" -eq 1 || "$path" != "$1" ]] || fail "Directory must not be writable by other users: $path"
         fi
       fi
       [[ "$path" == "/" ]] && break
@@ -98,15 +98,15 @@ setup_database() (
   data_directory=$(absolute_path "$data_directory")
   [[ "$data_directory" != "/" && "$extraction_directory" != "/" ]] || fail "Do not use the filesystem root as a setup directory."
   secure_path "$extraction_directory"
-  secure_path "$data_directory"
+  secure_path "$data_directory" 0
   (umask 022; mkdir -p -- "$data_directory")
   mkdir -p -- "$extraction_directory"
-  secure_path "$data_directory"
+  secure_path "$data_directory" 0
   secure_path "$extraction_directory"
   data_directory=$(cd -P -- "$data_directory" && pwd)
   extraction_directory=$(cd -P -- "$extraction_directory" && pwd)
   [[ "$data_directory" != "/" && "$extraction_directory" != "/" ]] || fail "Do not use the filesystem root as a setup directory."
-  secure_path "$data_directory"
+  secure_path "$data_directory" 0
   secure_path "$extraction_directory"
   lock="$data_directory/.ipgeo-setup.lock"
   mkdir -- "$lock" 2>/dev/null || fail "Another setup may be running: $lock"

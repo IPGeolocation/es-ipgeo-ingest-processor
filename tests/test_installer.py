@@ -7,6 +7,7 @@ import json
 import os
 from pathlib import Path
 import shutil
+import signal
 import socket
 import ssl
 import subprocess
@@ -68,7 +69,7 @@ class InstallerTest(unittest.TestCase):
         cls.mock = subprocess.Popen([
             "postman", "simulation", "run", str(mock / "simulation.yaml"),
             "--port", str(cls.mock_port), "--output", "ndjson", "--no-history"
-        ], stdout=cls.log, stderr=cls.log)
+        ], stdout=cls.log, stderr=cls.log, start_new_session=True)
         cls.addClassCleanup(cls.stop_mock)
         deadline = time.monotonic() + 30
         while time.monotonic() < deadline:
@@ -113,8 +114,17 @@ class InstallerTest(unittest.TestCase):
 
     @classmethod
     def stop_mock(cls):
-        cls.mock.terminate()
-        cls.mock.wait(timeout=10)
+        try:
+            os.killpg(cls.mock.pid, signal.SIGINT)
+            cls.mock.wait(timeout=10)
+        except subprocess.TimeoutExpired:
+            try:
+                os.killpg(cls.mock.pid, signal.SIGKILL)
+            except ProcessLookupError:
+                pass
+            cls.mock.wait(timeout=5)
+        except ProcessLookupError:
+            cls.mock.wait(timeout=5)
         cls.log.close()
         cls.shared.cleanup()
 
@@ -311,6 +321,18 @@ exec "$TEST_CURL" --noproxy '*' --cacert "$TEST_CERT" --connect-to "database.ipg
             self.assertEqual(0, result.returncode)
             self.assertEqual(expected, result.stdout)
         self.assert_unrelated()
+
+    @unittest.skipUnless(os.geteuid() == 0, "Requires a root-owned sticky directory")
+    def test_sticky_directory_is_only_allowed_as_a_parent(self):
+        shared = self.base / "shared"
+        shared.mkdir()
+        shared.chmod(0o1777)
+        args = ["-d", "valid", "-t", str(shared), "-e", str(self.extract)]
+        self.assertNotEqual(0, self.run_case(flags=args)[0])
+        self.assertFalse((self.base / "curl-args").exists())
+        args[3] = str(shared / "ipgeo")
+        self.assertEqual(0, self.run_case(flags=args)[0])
+        self.assertEqual(self.good[0][1], (shared / "ipgeo" / GEO).read_bytes())
 
     def test_requests_reached_the_simulation(self):
         self.assertEqual(0, self.run_case()[0])
