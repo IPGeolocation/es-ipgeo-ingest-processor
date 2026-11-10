@@ -71,7 +71,7 @@ The IPGeo Ingest Processor looks up each IP address in IPGeolocation.io data and
 ### Benefits of Using IPGeo Ingest Processor
 
 - **Enhanced Analytics**: By enriching your documents with geolocation data, you can perform more detailed and meaningful analysis.
-- **Improved Decision Making**: Visualizing geospatial data helps in making informed decisions based on the geographic distribution of your data.
+- **Improved Decision-Making**: Visualizing geospatial data helps in making informed decisions based on the geographic distribution of your data.
 - **Real-Time Insights**: Integrating with Logstash enables real-time log enrichment, allowing you to monitor and respond to events as they happen.
 - **Maps and dashboards**: Once the fields are indexed, you can plot requests on a Kibana map and filter by country, ISP, or threat flags.
 

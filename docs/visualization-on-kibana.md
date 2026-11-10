@@ -62,7 +62,7 @@ Here’s a screenshot of what your map visualization might look like:
 1. **Enhanced Data Understanding**:
    - Visualizing data on a map provides an intuitive way to understand geographic patterns and trends. It makes it easier to identify clusters, outliers, and spatial relationships that might be missed in traditional tabular data.
    
-2. **Improved Decision Making**:
+2. **Improved Decision-Making**:
    - By seeing where events are happening, organizations can make more informed decisions. For example, a company can identify regions with high sales or areas that need more resources based on customer activity.
    
 3. **Real-Time Monitoring**:
